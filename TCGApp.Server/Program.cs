@@ -1,4 +1,11 @@
+using Microsoft.EntityFrameworkCore;
+using TCGApp.Server.Data;
+
 var builder = WebApplication.CreateBuilder(args);
+
+// Establish connection to database via the connection string in appsettings.json
+var connectionString = builder.Configuration.GetConnectionString("DefaultConnection") ?? throw new InvalidOperationException("Connection string 'DefaultConnection' not found.");
+builder.Services.AddDbContext<TCGAppContext>(options => options.UseSqlServer(connectionString));
 
 // Add services to the container.
 
