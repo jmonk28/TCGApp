@@ -31,7 +31,7 @@ using TCGApp.Server.Models;
                             CardGame = reader.GetString(reader.GetOrdinal("CardGame")),
                             CardType = reader.GetString(reader.GetOrdinal("CardType")),
                             Rarity = reader.GetString(reader.GetOrdinal("Rarity")),
-                            Set = reader.GetString(reader.GetOrdinal("Set")),
+                            CardSet = reader.GetString(reader.GetOrdinal("CardSet")),
                             Price = reader.GetFloat(reader.GetOrdinal("Price")),
                             // Assuming SpecialProperties and InGameProperties are stored as comma-separated strings
                             SpecialProperties = reader.GetString(reader.GetOrdinal("SpecialProperties")).Split(',').ToList(),
@@ -58,4 +58,31 @@ using TCGApp.Server.Models;
                 command.ExecuteNonQuery();
             }
         }
+
+    public TCGUser GetUserByUsername(string username)
+    {
+        TCGUser user = null;
+        using (var connection = new SqlConnection(_connectionString))
+        {
+            connection.Open();
+            var command = new SqlCommand("SELECT * FROM TCGUser WHERE Username = @Username", connection);
+            command.Parameters.AddWithValue("@Username", username);
+            using (var reader = command.ExecuteReader())
+            {
+                if (reader.Read())
+                {
+                    user = new TCGUser
+                    {
+                        Id = reader.GetInt32(reader.GetOrdinal("Id")),
+                        Username = reader.GetString(reader.GetOrdinal("Username")),
+                        Email = reader.GetString(reader.GetOrdinal("Email")),
+                        PasswordHash = reader.GetString(reader.GetOrdinal("PasswordHash")),
+                        LastLogin = reader.GetDateTime(reader.GetOrdinal("LastLogin"))
+                    };
+                }
+            }
+        }
+        return user;
+        
     }
+}
