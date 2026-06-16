@@ -12,5 +12,7 @@ namespace TCGApp.Server.Data
         public DbSet<TCGApp.Server.Models.TCGUser> TCGUser { get; set; }
         public DbSet<TCGApp.Server.Models.Collection> Collection { get; set; }
         public DbSet<TCGApp.Server.Models.Card> Card { get; set; }
+        public DbSet<TCGApp.Server.Models.Collection> CollectionCard { get; set; }
+        public DbSet<TCGApp.Server.Models.UserCard> UserCard { get; set; }
     }
 }

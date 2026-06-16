@@ -16,7 +16,7 @@ namespace TCGApp.Server.Models
         public TCGUser TCGUser { get; set; } // Navigation property to the owning user
 
         [ForeignKey("Card")]
-        public int CardId { get; set; }
+        public int CardId { get; set; } // Foreign key to the original card
         public Card Card { get; set; } // Navigation property to the card details
 
     }

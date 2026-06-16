@@ -154,8 +154,11 @@ export default function Navbar({ brand = 'TCG App', links = null, onNavigate = n
             </li>
           );
         })}
-          </ul>
-          <button style={{ background: '#00FF00' }} onClick={(e) => handleNav('/login') }>Login</button>
+      </ul>
+      <div>
+          <button style={{ background: '#00B3B8', margin: 0 }} onClick={(e) => handleNav('/login')}>Login</button>
+          <button style={{ background: '#00B3B8', margin: 0 }} onClick={(e) => handleNav('/register')}>Register</button>
+      </div>
     </nav>
   );
 }

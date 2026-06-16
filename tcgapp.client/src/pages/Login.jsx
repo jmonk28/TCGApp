@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
+import Navbar from './Navbar';
 
 export default function Login() {
   const navigate = useNavigate();
@@ -41,8 +42,9 @@ export default function Login() {
     try {
       const resp = await fetch('localhost:56124/api/LoginController', {
         method: 'POST',
+        credentials: 'include',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ email: email.trim(), password }),
+        body: JSON.stringify({ email: email.trim(), password: password }),
       });
 
       if (!resp.ok) {
@@ -61,14 +63,16 @@ export default function Login() {
         setServerError('Invalid response from server.');
       }
     } catch (err) {
-      setServerError('Network error. Please try again.');
+      setServerError('Network error. Please try again. Details: ' + err);
     } finally {
       setLoading(false);
     }
   }
 
-  return (
-    <main aria-labelledby="login-heading" style={{ maxWidth: 420, margin: '2rem auto' }}>
+    return (
+    <>
+    <Navbar />
+    <main aria-labelledby="login-heading" style={{margin: '2rem auto' }}>
       <h1 id="login-heading">Sign in</h1>
 
       <form onSubmit={handleSubmit} noValidate>
@@ -121,5 +125,6 @@ export default function Login() {
         </button>
       </form>
     </main>
+  </>
   );
 }
