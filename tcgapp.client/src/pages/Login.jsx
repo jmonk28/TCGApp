@@ -1,9 +1,12 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useContext } from 'react';
 import { useNavigate } from 'react-router-dom';
 import Navbar from './Navbar';
+import { AuthContext } from "../context/AuthContext";
 
 export default function Login() {
-  const navigate = useNavigate();
+    const navigate = useNavigate();
+    const { setAccessToken } = useContext(AuthContext);
+    const { setUser } = useContext(AuthContext);
 
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
@@ -40,9 +43,8 @@ export default function Login() {
 
     setLoading(true);
     try {
-      const resp = await fetch('localhost:56124/api/LoginController', {
+        const resp = await fetch('https://localhost:7207/api/Login/login', {
         method: 'POST',
-        credentials: 'include',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ email: email.trim(), password: password }),
       });
@@ -55,10 +57,13 @@ export default function Login() {
       }
 
       const data = await resp.json();
-      // expected: { token: '...', user: { ... } }
-      if (data.token) {
-        localStorage.setItem('authToken', data.token);
-        navigate('/');
+      // Receive token from backend
+        if (data.accessToken) {
+          //Place the access token in the current React context
+          setAccessToken(data.accessToken);
+          setUser(data.username);
+          //Navigate to home
+          navigate("/");
       } else {
         setServerError('Invalid response from server.');
       }

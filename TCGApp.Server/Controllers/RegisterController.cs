@@ -6,6 +6,7 @@ using TCGApp.Server.Service;
 using TCGApp.Server.Models;
 using TCGApp.Server.Utilities;
 using TCGApp.Server.DTO;
+using Microsoft.AspNetCore.Authorization;
 
 namespace TCGApp.Server.Controllers
 {
@@ -23,7 +24,7 @@ namespace TCGApp.Server.Controllers
             _userService = userService;
         }
 
-  
+        [AllowAnonymous]
         [HttpPost("newuser")]
         [EnableCors("AllowSpecificOrigins")]
         public async Task<IActionResult> RegisterNewUser([FromBody] RegisterRequest newUser)

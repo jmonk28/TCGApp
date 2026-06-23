@@ -1,6 +1,7 @@
-﻿import React, { useState, useEffect } from 'react';
+﻿import React, { useState, useEffect, useContext } from 'react';
 import { Button, Stack } from '@mui/material';
 import { useNavigate } from 'react-router-dom';
+import { AuthContext } from '../context/AuthContext';
 
 /*
   Simple, framework-agnostic Navbar component.
@@ -10,7 +11,9 @@ import { useNavigate } from 'react-router-dom';
 */
 
 export default function Navbar({ brand = 'TCG App', links = null, onNavigate = null }) {
-  const navigate = useNavigate();
+    const navigate = useNavigate();
+    const { accessToken, setAccessToken, user, setUser } = useContext(AuthContext);
+    const [isLoggedIn, setIsLoggedIn] = useState(false);
   const [mobileOpen, setMobileOpen] = useState(false);
   const [currentPath, setCurrentPath] = useState(() => {
     if (typeof window !== 'undefined' && window.location) {
@@ -22,6 +25,10 @@ export default function Navbar({ brand = 'TCG App', links = null, onNavigate = n
   useEffect(() => {
     function handleLocationChange() {
       setCurrentPath(window.location.pathname);
+    }
+
+    function loggedIn() {
+      if (accessToken != null) setIsLoggedIn(true);
     }
 
     // Listen for popstate so active state updates when using browser back/forward
@@ -68,7 +75,29 @@ export default function Navbar({ brand = 'TCG App', links = null, onNavigate = n
       }, 0);
     }
     setMobileOpen(false);
-  }
+    }
+
+    async function handleLogout() {
+        //If the AuthContext fields are already null, we are not logged in anyway, so just do nothing and return
+        if (accessToken == null || user == null) return;
+
+        //Set fields of AuthContext to null
+        setAccessToken(null);
+        setUser(null);
+
+        try {
+            const resp = await fetch("https://localhost:7207/api/Login/logout", {
+                method: 'GET'
+            });
+
+            if (!resp.ok) {
+                alert("Failed to log out");
+            }
+        } catch (err) {
+            alert("Error in logout functionality: check console");
+            console.log(err);
+        }
+    }
 
   const styles = {
     nav: {
@@ -155,9 +184,13 @@ export default function Navbar({ brand = 'TCG App', links = null, onNavigate = n
           );
         })}
       </ul>
-      <div>
+      <div hidden={isLoggedIn}>
           <button style={{ background: '#00B3B8', margin: 0 }} onClick={(e) => handleNav('/login')}>Login</button>
           <button style={{ background: '#00B3B8', margin: 0 }} onClick={(e) => handleNav('/register')}>Register</button>
+      </div>
+      <div hidden={!isLoggedIn }>
+          <img src="../assets/blank_profile_pic.png" style={{ height: "20px", width: "20px", borderRadius: "8px" }} />
+          <button style={{ background: '#00B3B8', margin: 0 }} onClick={(e) => handleLogout()}>Logout</button>
       </div>
     </nav>
   );
