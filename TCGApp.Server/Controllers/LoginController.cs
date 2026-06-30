@@ -48,15 +48,19 @@ namespace TCGApp.Server.Controllers
             SHA256Hash hasher = new SHA256Hash();
             string pass_hash = hasher.ComputeSHA256Hash(credentials.Password);
 
+            _logger.LogInformation("Grabbing login user...");
             var loginUser = await _userService.PerformLogin(credentials.Email, pass_hash);
             if (loginUser == null) return Unauthorized();
 
             //Configure jwt and refresh tokens from token service
+            _logger.LogInformation("Generating access and refresh tokens...");
             string jwtToken = _tokenService.GenerateJwtToken(loginUser);
             string refreshToken = _tokenService.GenerateRefreshToken();
+            _logger.LogInformation("Tokens:\n" + jwtToken + "\n" +  refreshToken);
 
             try
             {
+                _logger.LogInformation("Saving refresh token to user in database...");
                 await _userService.SaveRefreshTokenAsync(loginUser.UserID, refreshToken);
             } catch (Exception ex)
             {
@@ -69,9 +73,12 @@ namespace TCGApp.Server.Controllers
                 HttpOnly = true,
                 Secure = true,
                 SameSite = SameSiteMode.None,
+                Path = "/",
+                Domain = "localhost",
                 Expires = DateTime.UtcNow.AddDays(7)
             };
 
+            _logger.LogInformation("Appending refresh token as browser cookie...");
             Response.Cookies.Append("refreshToken", refreshToken, cookieOptions);
 
             //Return access token to frontend
@@ -90,6 +97,7 @@ namespace TCGApp.Server.Controllers
         {
             //Read refresh token
             var refreshToken = Request.Cookies["refreshToken"];
+            if (string.IsNullOrEmpty(refreshToken)) _logger.LogInformation("Refresh cookie not working in refresh");
             if (refreshToken == null) return Unauthorized("No active refresh token");
 
             //Make sure user with refresh token actually exists
@@ -108,6 +116,8 @@ namespace TCGApp.Server.Controllers
                 HttpOnly= true,
                 Secure = true,
                 SameSite = SameSiteMode.None,
+                Path = "/",
+                Domain = "localhost",
                 Expires= DateTime.UtcNow.AddDays(7)
             });
 
@@ -123,15 +133,18 @@ namespace TCGApp.Server.Controllers
         }
 
         [AllowAnonymous]
-        [HttpGet("logout")]
+        [HttpPost("logout")]
         [EnableCors("AllowSpecificOrigins")]
         public async Task<IActionResult> Logout()
         {
             //Clear the user's refresh token in the database
             var refreshToken = Request.Cookies["refreshToken"];
+            _logger.LogInformation("Grabbed refresh token cookie");
             var user = await _userService.GetUserByRefreshToken(refreshToken);
+            _logger.LogInformation("Grabbed user");
             var success = await _userService.UserLogout(user);
             if (!success) return BadRequest("User logout failed");
+            _logger.LogInformation("Logged out user");
 
             //Clear the refresh token in the browser
             Response.Cookies.Delete("refreshToken");

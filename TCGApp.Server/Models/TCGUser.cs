@@ -15,7 +15,7 @@ namespace TCGApp.Server.Models
         [Required]
         public string PasswordHash { get; set; }
         public DateTime? LastLogin { get; set; }
-        public string RefreshTokenHash { get; set; }
+        public string? RefreshTokenHash { get; set; }
         public DateTime? RefreshTokenExpiry { get; set; }
 
         public ICollection<Collection>? Collections { get; set; }

@@ -1,7 +1,8 @@
-﻿import React, { useState, useEffect, useContext } from 'react';
+﻿import React, { useState, useEffect, useContext, useRef } from 'react';
 import { Button, Stack } from '@mui/material';
 import { useNavigate } from 'react-router-dom';
 import { AuthContext } from '../context/AuthContext';
+import PopUpModal from '../assets/PopUpModal';
 
 /*
   Simple, framework-agnostic Navbar component.
@@ -14,22 +15,22 @@ export default function Navbar({ brand = 'TCG App', links = null, onNavigate = n
     const navigate = useNavigate();
     const { accessToken, setAccessToken, user, setUser } = useContext(AuthContext);
     const [isLoggedIn, setIsLoggedIn] = useState(false);
-  const [mobileOpen, setMobileOpen] = useState(false);
-  const [currentPath, setCurrentPath] = useState(() => {
-    if (typeof window !== 'undefined' && window.location) {
-      return window.location.pathname;
-    }
-    return '/';
-  });
+    const [mobileOpen, setMobileOpen] = useState(false);
+    const [currentPath, setCurrentPath] = useState(() => {
+        if (typeof window !== 'undefined' && window.location) {
+            return window.location.pathname;
+        }
+        return '/';
+    });
+    const [logoutModalOpen, setLogoutModalOpen] = useState(false);
+    const [popUpMessage, setPopUpMessage] = useState(null);
 
   useEffect(() => {
     function handleLocationChange() {
       setCurrentPath(window.location.pathname);
     }
 
-    function loggedIn() {
-      if (accessToken != null) setIsLoggedIn(true);
-    }
+    if (accessToken != null) setIsLoggedIn(true);
 
     // Listen for popstate so active state updates when using browser back/forward
     window.addEventListener('popstate', handleLocationChange);
@@ -87,16 +88,21 @@ export default function Navbar({ brand = 'TCG App', links = null, onNavigate = n
 
         try {
             const resp = await fetch("https://localhost:7207/api/Login/logout", {
-                method: 'GET'
+                method: 'POST',
+                credentials: 'include'
             });
 
             if (!resp.ok) {
-                alert("Failed to log out");
+                setPopUpMessage("Failed to log out");
+                setLogoutModalOpen(true);
+                return;
             }
         } catch (err) {
-            alert("Error in logout functionality: check console");
             console.log(err);
         }
+        setPopUpMessage("Logout Successful!");
+        setLogoutModalOpen(true);
+        setIsLoggedIn(false);
     }
 
   const styles = {
@@ -189,9 +195,12 @@ export default function Navbar({ brand = 'TCG App', links = null, onNavigate = n
           <button style={{ background: '#00B3B8', margin: 0 }} onClick={(e) => handleNav('/register')}>Register</button>
       </div>
       <div hidden={!isLoggedIn }>
-          <img src="../assets/blank_profile_pic.png" style={{ height: "20px", width: "20px", borderRadius: "8px" }} />
+          <img src="../assets/blank_profile_pic.png" style={{ height: "20px", width: "20px", borderRadius: "5px" }} />
           <button style={{ background: '#00B3B8', margin: 0 }} onClick={(e) => handleLogout()}>Logout</button>
       </div>
+          <PopUpModal isOpen={logoutModalOpen} onClose={() => { setLogoutModalOpen(false); setPopUpMessage(null); }}>
+                <p>{popUpMessage}</p>
+          </PopUpModal>
     </nav>
   );
 }

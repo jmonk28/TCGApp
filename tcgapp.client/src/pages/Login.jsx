@@ -44,12 +44,14 @@ export default function Login() {
     setLoading(true);
     try {
         const resp = await fetch('https://localhost:7207/api/Login/login', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ email: email.trim(), password: password }),
+            method: 'POST',
+            credentials: 'include',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({ email: email.trim(), password: password }),
       });
 
       if (!resp.ok) {
+        console.log("So our login is failing here");
         const body = await resp.json().catch(() => ({}));
         setServerError(body.message || 'Login failed.');
         setLoading(false);
@@ -59,7 +61,9 @@ export default function Login() {
       const data = await resp.json();
       // Receive token from backend
         if (data.accessToken) {
-          //Place the access token in the current React context
+            //Place the access token in the current React context
+            console.log(data.accessToken);
+            console.log(data.username);
           setAccessToken(data.accessToken);
           setUser(data.username);
           //Navigate to home

@@ -8,6 +8,7 @@ using Microsoft.AspNetCore.Razor.TagHelpers;
 using Microsoft.IdentityModel.Tokens;
 using TCGApp.Server.Data;
 using TCGApp.Server.Service;
+using TCGApp.Server.Config;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -15,6 +16,8 @@ var builder = WebApplication.CreateBuilder(args);
 var connectionString = builder.Configuration.GetConnectionString("DefaultConnection") ?? throw new InvalidOperationException("Connection string 'DefaultConnection' not found.");
 builder.Services.AddDbContext<TCGAppContext>(options => options.UseSqlServer(connectionString));
 builder.Services.AddScoped<UserService>();
+builder.Services.AddScoped<TokenService>();
+builder.Services.Configure<JwtSettings>(builder.Configuration.GetSection("Jwt"));
 
 // Add services to the container.
 
@@ -32,6 +35,8 @@ builder.Services.AddCors(options =>
     });
 });
 
+var jwtSettings = builder.Configuration.GetSection("Jwt").Get<JwtSettings>();
+
 builder.Services.AddAuthentication("Bearer")
     .AddJwtBearer(options =>
     {
@@ -41,10 +46,10 @@ builder.Services.AddAuthentication("Bearer")
             ValidateAudience = true,
             ValidateLifetime = true,
             ValidateIssuerSigningKey = true,
-            ValidIssuer = builder.Configuration["Jwt:Issuer"],
-            ValidAudience = builder.Configuration["Jwt:Audience"],
+            ValidIssuer = jwtSettings.Issuer,
+            ValidAudience = jwtSettings.Audience,
             IssuerSigningKey = new SymmetricSecurityKey(
-                Encoding.UTF8.GetBytes(builder.Configuration["Jwt:Key"])
+                Encoding.UTF8.GetBytes(jwtSettings.Key)
             )
         };
     });
