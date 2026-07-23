@@ -91,7 +91,7 @@ namespace TCGApp.Server.Controllers
         }
 
         [AllowAnonymous]
-        [HttpGet("refresh")]
+        [HttpPost("refresh")]
         [EnableCors("AllowSpecificOrigins")]
         public async Task<IActionResult> TokenRefresh()
         {

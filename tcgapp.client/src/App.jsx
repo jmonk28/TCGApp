@@ -8,35 +8,24 @@ import './App.css'
 
 function App() {
 
-    const { setAccessToken, setUser } = useContext(AuthContext);
-
-    async function grabToken() {
-        const resp = await fetch("https://localhost:7207/api/Login/refresh", {
-            method: 'GET',
-            credentials: 'include'
-        });
-
-        if (!resp.ok) {
-            setAccessToken(null);
-            setUser(null);
-        }
-        else {
-            const data = await resp.json();
-            setAccessToken(data.accessToken);
-            setUser(data.username);
-        }
-    }
+    const { accessToken } = useContext(AuthContext);
+    const [isLoggedIn, setIsLoggedIn] = useState(false);
 
     useEffect(() => {
-        grabToken();
+        document.title = 'Home - TCG App';
     }, []);
+
+    useEffect(() => {
+        if (accessToken != null) setIsLoggedIn(true);
+        else setIsLoggedIn(false);
+    }, [accessToken])
 
   return (
     <BrowserRouter>
        <Routes>
               <Route path="/" element={<Home />} />
-              <Route path="/login" element={<Login />} />
-              <Route path="/register" element={<Register />} />
+              <Route path="/login" element={isLoggedIn ? null : <Login />}  />
+              <Route path="/register" element={isLoggedIn ? null : <Register />} />
        </Routes>
     </BrowserRouter>
   )

@@ -37,6 +37,22 @@
   padding: 2em;
 }
 
+.card-display {
+    width: auto;
+    height: 450px;
+    border-radius: 4px;
+    background-color: #808080;
+    display: flex;
+    align-items: center;
+    cursor: pointer;
+}
+
+.card-image {
+    max-height: 450px;
+    width: auto;
+    border-radius: 5px;
+}
+
 .read-the-docs {
   color: #888;
 }

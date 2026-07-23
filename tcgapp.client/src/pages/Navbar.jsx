@@ -30,12 +30,14 @@ export default function Navbar({ brand = 'TCG App', links = null, onNavigate = n
       setCurrentPath(window.location.pathname);
     }
 
-    if (accessToken != null) setIsLoggedIn(true);
-
     // Listen for popstate so active state updates when using browser back/forward
     window.addEventListener('popstate', handleLocationChange);
     return () => window.removeEventListener('popstate', handleLocationChange);
   }, []);
+
+    useEffect(() => {
+        if (accessToken != null) setIsLoggedIn(true);
+    }, [accessToken]);
 
     function handleNav(path) {
         navigate(path);
@@ -195,8 +197,10 @@ export default function Navbar({ brand = 'TCG App', links = null, onNavigate = n
           <button style={{ background: '#00B3B8', margin: 0 }} onClick={(e) => handleNav('/register')}>Register</button>
       </div>
       <div hidden={!isLoggedIn }>
-          <img src="../assets/blank_profile_pic.png" style={{ height: "20px", width: "20px", borderRadius: "5px" }} />
-          <button style={{ background: '#00B3B8', margin: 0 }} onClick={(e) => handleLogout()}>Logout</button>
+        <div style={{display: 'flex', gap: '5px', alignItems: 'center'}}>
+            <img src="../../public/blank_profile_pic.png" style={{ height: '40px', width: '40px', borderRadius: '5px', margin: 0 }} />
+            <button style={{ background: '#00B3B8', margin: 0 }} onClick={(e) => handleLogout()}>Logout</button>
+        </div>
       </div>
           <PopUpModal isOpen={logoutModalOpen} onClose={() => { setLogoutModalOpen(false); setPopUpMessage(null); }}>
                 <p>{popUpMessage}</p>

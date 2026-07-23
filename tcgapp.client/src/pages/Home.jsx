@@ -1,44 +1,42 @@
 // Home.jsx
 // Main landing page for the application.
 
-import React, { useEffect } from 'react';
+import React, { useState, useEffect, useContext } from 'react';
 import Navbar from './Navbar';
+import { AuthContext } from '../context/AuthContext';
+import CardCarousel from '../assets/CardCarousel';
 
 export default function Home() {
+
+    const { accessToken } = useContext(AuthContext); 
+    const [isLoggedIn, setIsLoggedIn] = useState(false);
+    const cardItems = ["/ecl-88-bitterbloom-bearer.jpg", "/krenko.jpg"]
+
   useEffect(() => {
     document.title = 'Home - TCG App';
   }, []);
 
+    useEffect(() => {
+        if (accessToken != null) setIsLoggedIn(true);
+        else setIsLoggedIn(false);
+    }, [accessToken])
+
     return (
     <>
     <Navbar />
-    <main className="page-home" aria-labelledby="home-heading" style={{ padding: '24px' }}>
+    <main className="page-home" aria-labelledby="home-heading" style={{ padding: '100px' }}>
       {/* Page header */}
       <header>
         <h1 id="home-heading">Welcome to TCG App</h1>
         <p className="lead">
-          Manage your trading card collections, decks, and matches in one place.
+          Find the cards you want from the people who have them.
         </p>
       </header>
 
-      {/* Quick actions */}
-      <section aria-label="quick actions" style={{ marginTop: '16px' }}>
-        <h2>Quick Actions</h2>
-        <div style={{ display: 'flex', gap: '12px', flexWrap: 'wrap' }}>
-          <a href="/collections" className="btn" role="button">View Collections</a>
-          <a href="/decks" className="btn" role="button">Browse Decks</a>
-          <a href="/matches" className="btn" role="button">Recent Matches</a>
-        </div>
-      </section>
-
-      {/* Overview */}
-      <section aria-label="overview" style={{ marginTop: '24px' }}>
-        <h2>Overview</h2>
-        <p>
-          This dashboard provides a quick way to jump into your most-used areas.
-          Use the navigation links above to explore collections, build decks, or review match history.
-        </p>
-      </section>
+      {isLoggedIn && (<section aria-label="popular-cards" style={{ marginTop: '20px' }}>
+            <h1>Popular This Week</h1>
+            <CardCarousel cards={cardItems} container="card-display" cardClass="card-image"/>
+      </section>)}
 
      </main>
     </>
