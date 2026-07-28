@@ -5,8 +5,7 @@ import { AuthContext } from "../context/AuthContext";
 
 export default function Login() {
     const navigate = useNavigate();
-    const { setAccessToken } = useContext(AuthContext);
-    const { setUser } = useContext(AuthContext);
+    const { setAccessToken, setUser, setIsLoggedIn } = useContext(AuthContext);
 
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
@@ -51,7 +50,6 @@ export default function Login() {
       });
 
       if (!resp.ok) {
-        console.log("So our login is failing here");
         const body = await resp.json().catch(() => ({}));
         setServerError(body.message || 'Login failed.');
         setLoading(false);
@@ -61,11 +59,10 @@ export default function Login() {
       const data = await resp.json();
       // Receive token from backend
         if (data.accessToken) {
-            //Place the access token in the current React context
-            console.log(data.accessToken);
-            console.log(data.username);
+          //Place the access token in the current React context
           setAccessToken(data.accessToken);
           setUser(data.username);
+          setIsLoggedIn(true)
           //Navigate to home
           navigate("/");
       } else {

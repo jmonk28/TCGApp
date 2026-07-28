@@ -1,25 +1,21 @@
 // Home.jsx
 // Main landing page for the application.
 
-import React, { useState, useEffect, useContext } from 'react';
+import React, { useEffect, useContext } from 'react';
 import Navbar from './Navbar';
 import { AuthContext } from '../context/AuthContext';
 import CardCarousel from '../assets/CardCarousel';
 
 export default function Home() {
 
-    const { accessToken } = useContext(AuthContext); 
-    const [isLoggedIn, setIsLoggedIn] = useState(false);
-    const cardItems = ["/ecl-88-bitterbloom-bearer.jpg", "/krenko.jpg"]
+    const { isLoggedIn } = useContext(AuthContext);
+    const cards = [{image: "/ecl-88-bitterbloom-bearer.jpg", name: "Bitterbloom Bearer" },
+                   {image: "/krenko.jpg", name: "Krenko, Mob Boss"},
+                   {image: "/cloud.png", name: "Cloud, Planet's Champion"}];
 
   useEffect(() => {
     document.title = 'Home - TCG App';
   }, []);
-
-    useEffect(() => {
-        if (accessToken != null) setIsLoggedIn(true);
-        else setIsLoggedIn(false);
-    }, [accessToken])
 
     return (
     <>
@@ -35,7 +31,7 @@ export default function Home() {
 
       {isLoggedIn && (<section aria-label="popular-cards" style={{ marginTop: '20px' }}>
             <h1>Popular This Week</h1>
-            <CardCarousel cards={cardItems} container="card-display" cardClass="card-image"/>
+            <CardCarousel cards={cards} container="card-display" cardClass="card-image"/>
       </section>)}
 
      </main>

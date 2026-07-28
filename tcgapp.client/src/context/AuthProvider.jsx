@@ -5,6 +5,7 @@ import { AuthContext } from "./AuthContext";
 export function AuthProvider({ children }) {
     const [accessToken, setAccessToken] = useState(null);
     const [user, setUser] = useState(null);
+    const [isLoggedIn, setIsLoggedIn] = useState(false);
     const didRun = useRef(false);
 
     useEffect(() => {
@@ -20,6 +21,7 @@ export function AuthProvider({ children }) {
                     const data = await resp.json();
                     setAccessToken(data.accessToken);
                     setUser(data.username);
+                    setIsLoggedIn(true);
                 }
                 else {
                     console.error("401 Unauthorized: unable to fetch refresh token");
@@ -45,7 +47,9 @@ export function AuthProvider({ children }) {
             accessToken,
             setAccessToken,
             user,
-            setUser
+            setUser,
+            isLoggedIn,
+            setIsLoggedIn
         }}>
             {children}
         </AuthContext.Provider>

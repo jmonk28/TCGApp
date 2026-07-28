@@ -4,17 +4,10 @@ import { useNavigate } from 'react-router-dom';
 import { AuthContext } from '../context/AuthContext';
 import PopUpModal from '../assets/PopUpModal';
 
-/*
-  Simple, framework-agnostic Navbar component.
-  - Uses plain anchor tags so it works whether the app uses React Router or server-side routing.
-  - Accepts `links` and `brand` props and an optional `onNavigate` callback that receives the clicked `to` value.
-  - Keeps a small internal mobile menu state.
-*/
 
 export default function Navbar({ brand = 'TCG App', links = null, onNavigate = null }) {
     const navigate = useNavigate();
-    const { accessToken, setAccessToken, user, setUser } = useContext(AuthContext);
-    const [isLoggedIn, setIsLoggedIn] = useState(false);
+    const { accessToken, setAccessToken, user, setUser, isLoggedIn, setIsLoggedIn } = useContext(AuthContext);
     const [mobileOpen, setMobileOpen] = useState(false);
     const [currentPath, setCurrentPath] = useState(() => {
         if (typeof window !== 'undefined' && window.location) {
@@ -192,16 +185,16 @@ export default function Navbar({ brand = 'TCG App', links = null, onNavigate = n
           );
         })}
       </ul>
-      <div hidden={isLoggedIn}>
-          <button style={{ background: '#00B3B8', margin: 0 }} onClick={(e) => handleNav('/login')}>Login</button>
-          <button style={{ background: '#00B3B8', margin: 0 }} onClick={(e) => handleNav('/register')}>Register</button>
-      </div>
-      <div hidden={!isLoggedIn }>
-        <div style={{display: 'flex', gap: '5px', alignItems: 'center'}}>
-            <img src="../../public/blank_profile_pic.png" style={{ height: '40px', width: '40px', borderRadius: '5px', margin: 0 }} />
-            <button style={{ background: '#00B3B8', margin: 0 }} onClick={(e) => handleLogout()}>Logout</button>
-        </div>
-      </div>
+          {!isLoggedIn && (<div>
+              <button style={{ background: '#00B3B8', margin: 0 }} onClick={(e) => handleNav('/login')}>Login</button>
+              <button style={{ background: '#00B3B8', margin: 0 }} onClick={(e) => handleNav('/register')}>Register</button>
+          </div>)}
+          {isLoggedIn && (<div>
+              <div style={{ display: 'flex', gap: '5px', alignItems: 'center' }}>
+                  <a href="/profile"><img src="../../public/blank_profile_pic.png" style={{ height: '40px', width: '40px', borderRadius: '5px', margin: 0, cursor: 'pointer' }} /></a>
+                  <button style={{ background: '#00B3B8', margin: 0 }} onClick={(e) => handleLogout()}>Logout</button>
+              </div>
+          </div>)}
           <PopUpModal isOpen={logoutModalOpen} onClose={() => { setLogoutModalOpen(false); setPopUpMessage(null); }}>
                 <p>{popUpMessage}</p>
           </PopUpModal>

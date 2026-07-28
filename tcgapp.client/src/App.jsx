@@ -1,24 +1,19 @@
-import { useState, useEffect, useContext } from 'react'
+import { React, useEffect, useContext } from 'react'
 import { BrowserRouter, Routes, Route } from "react-router"
 import Home from './pages/Home'
 import Login from './pages/Login'
 import Register from './pages/Register'
+import Profile from './pages/Profile'
 import { AuthContext } from './context/AuthContext'
 import './App.css'
 
 function App() {
 
-    const { accessToken } = useContext(AuthContext);
-    const [isLoggedIn, setIsLoggedIn] = useState(false);
+    const { isLoggedIn } = useContext(AuthContext);
 
     useEffect(() => {
         document.title = 'Home - TCG App';
     }, []);
-
-    useEffect(() => {
-        if (accessToken != null) setIsLoggedIn(true);
-        else setIsLoggedIn(false);
-    }, [accessToken])
 
   return (
     <BrowserRouter>
@@ -26,6 +21,7 @@ function App() {
               <Route path="/" element={<Home />} />
               <Route path="/login" element={isLoggedIn ? null : <Login />}  />
               <Route path="/register" element={isLoggedIn ? null : <Register />} />
+              <Route path="/profile" element={isLoggedIn ? <Profile /> : null} />
        </Routes>
     </BrowserRouter>
   )
