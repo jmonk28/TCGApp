@@ -3,6 +3,7 @@ import { Button, Stack } from '@mui/material';
 import { useNavigate } from 'react-router-dom';
 import { AuthContext } from '../context/AuthContext';
 import PopUpModal from '../assets/PopUpModal';
+import HoverDialogue from '../assets/HoverDialogue';
 
 
 export default function Navbar({ brand = 'TCG App', links = null, onNavigate = null }) {
@@ -17,6 +18,7 @@ export default function Navbar({ brand = 'TCG App', links = null, onNavigate = n
     });
     const [logoutModalOpen, setLogoutModalOpen] = useState(false);
     const [popUpMessage, setPopUpMessage] = useState(null);
+    const [profileHoverShowing, setProfileHoverShowing] = useState(false);
 
   useEffect(() => {
     function handleLocationChange() {
@@ -39,7 +41,7 @@ export default function Navbar({ brand = 'TCG App', links = null, onNavigate = n
   const defaultLinks = [
     { to: '/', label: 'Home' },
     { to: '/collection', label: 'Collection' },
-    { to: '/decks', label: 'Decks' },
+    { to: '/search', label: 'Search' },
     { to: '/about', label: 'About' },
   ];
 
@@ -141,6 +143,17 @@ export default function Navbar({ brand = 'TCG App', links = null, onNavigate = n
       fontSize: '1.25rem',
       cursor: 'pointer',
     },
+    hoverDialogue: {
+      position: 'absolute',
+      width: 'auto',
+      height: 'auto',
+      backgroundColor: 'white',
+      color: 'black',
+      fontSize: '12px',
+      borderRadius: '2px',
+      padding: '2px',
+      zIndex: 5
+    }
     // responsive rules will be applied inline by checking window width at render time
   };
 
@@ -191,9 +204,10 @@ export default function Navbar({ brand = 'TCG App', links = null, onNavigate = n
           </div>)}
           {isLoggedIn && (<div>
               <div style={{ display: 'flex', gap: '5px', alignItems: 'center' }}>
-                  <a href="/profile"><img src="../../public/blank_profile_pic.png" style={{ height: '40px', width: '40px', borderRadius: '5px', margin: 0, cursor: 'pointer' }} /></a>
+                  <a style={{height: '40px', width: '40px'}} href="/profile" onMouseEnter={() => setProfileHoverShowing(true)} onMouseLeave={() => setProfileHoverShowing(false) }><img src="../../public/blank_profile_pic.png" style={{ height: 'inherit', width: 'inherit', borderRadius: '5px', cursor: 'pointer' }} /></a>
                   <button style={{ background: '#00B3B8', margin: 0 }} onClick={(e) => handleLogout()}>Logout</button>
               </div>
+              {profileHoverShowing && (<HoverDialogue dialogueStyle={styles.hoverDialogue} message="View Profile"></HoverDialogue>)}
           </div>)}
           <PopUpModal isOpen={logoutModalOpen} onClose={() => { setLogoutModalOpen(false); setPopUpMessage(null); }}>
                 <p>{popUpMessage}</p>

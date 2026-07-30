@@ -53,6 +53,18 @@
     border-radius: 5px;
 }
 
+.profile-item {
+    width: 400px;
+    margin-left: 20px;
+    align-items: center
+}
+
+.profile-header {
+    width: auto; 
+    height: auto; 
+    border: 1px solid white;
+}
+
 .read-the-docs {
   color: #888;
 }

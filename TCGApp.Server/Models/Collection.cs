@@ -9,10 +9,12 @@ namespace TCGApp.Server.Models
 
         [Key]
         public int Id { get; set; }
+        [Required]
         public string CollectionName { get; set; }
+        [Required]
         public string CollectionType { get; set; } // e.g. "Magic", "Pokemon", etc.
         public int CardCount { get; set; } // Number of cards in the collection
-        public ICollection<Card> Cards { get; set; } // Navigation property to the cards in the collection
+        public ICollection<CollectionCard>? Cards { get; set; } // Navigation property to the cards in the collection
 
         [ForeignKey("TCGUser")]
         public int TCGUserId { get; set; } // Foreign key to the owning user

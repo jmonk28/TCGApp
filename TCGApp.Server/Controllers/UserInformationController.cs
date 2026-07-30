@@ -15,10 +15,10 @@ namespace TCGApp.Server.Controllers
     [EnableCors("AllowSpecificOrigins")]
     public class UserInformationController : ControllerBase
     {
-        private readonly ILogger<LoginController> _logger;
+        private readonly ILogger<UserInformationController> _logger;
         private UserService _userService;
 
-        public UserInformationController(ILogger<LoginController> logger, UserService userService)
+        public UserInformationController(ILogger<UserInformationController> logger, UserService userService)
         {
             _logger = logger;
             _userService = userService;

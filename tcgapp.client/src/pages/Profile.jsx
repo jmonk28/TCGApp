@@ -49,24 +49,23 @@ export default function Profile() {
     return (
         <>
         <Navbar />
-        <div style={{display: 'flex', marginTop: '20px'}}>
+        <div style={{display: 'flex', marginTop: '20px', alignItems: 'center'}}>
             <div style={{maxHeight: '200px', maxWidth: '200px', float: 'left'}}>
                 <img src="/blank_profile_pic.png" style={{height: '200px', width: '200px', borderRadius: '5px'}} />
             </div>
-            <div style={{ width: 'auto', marginLeft: '20px'}}>
-                <div style={{ width: '200px', height: 'auto', border: '5px', borderColor: 'white' }}>
+            <div className="profile-item">
+                <div className="profile-header">
                     <h2>Username: {username}</h2>
                 </div>
-                <div style={{ width: '200px', height: 'auto', border: '5px', borderColor: 'white' }}>
+                    <div className="profile-header">
                     <h2>Email: {email}</h2>
                 </div>
             </div>
-
+        </div>
         
             <PopUpModal isOpen={profileModalOpen} onClose={() => { setProfileModalOpen(false); setPopUpMessage(null); }}>
                 <p>{popUpMessage}</p>
             </PopUpModal>
-        </div>
         </>
     );
 
