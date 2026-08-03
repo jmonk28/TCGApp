@@ -40,7 +40,7 @@ export default function Navbar({ brand = 'TCG App', links = null, onNavigate = n
 
   const defaultLinks = [
     { to: '/', label: 'Home' },
-    { to: '/collection', label: 'Collection' },
+    { to: '/collections', label: 'Collections' },
     { to: '/search', label: 'Search' },
     { to: '/about', label: 'About' },
   ];
@@ -198,7 +198,7 @@ export default function Navbar({ brand = 'TCG App', links = null, onNavigate = n
           );
         })}
       </ul>
-          {!isLoggedIn && (<div>
+          {!isLoggedIn && (<div style={{ display: 'flex', gap: '5px'}}>
               <button style={{ background: '#00B3B8', margin: 0 }} onClick={(e) => handleNav('/login')}>Login</button>
               <button style={{ background: '#00B3B8', margin: 0 }} onClick={(e) => handleNav('/register')}>Register</button>
           </div>)}

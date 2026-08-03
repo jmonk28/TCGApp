@@ -17,11 +17,13 @@ namespace TCGApp.Server.Controllers
     {
         private readonly ILogger<RegisterController> _logger;
         private UserService _userService;
+        private CollectionService _collectionService;
 
-        public RegisterController(ILogger<RegisterController> logger, UserService userService)
+        public RegisterController(ILogger<RegisterController> logger, UserService userService, CollectionService collectionService)
         {
             _logger = logger;
             _userService = userService;
+            _collectionService = collectionService;
         }
 
         [AllowAnonymous]
@@ -48,10 +50,19 @@ namespace TCGApp.Server.Controllers
             savedUser.PasswordHash = pass_hash;
             savedUser.LastLogin = null;
 
+            //Add base collection for user
+            var baseCollection = new Collection();
+            baseCollection.CollectionID = _collectionService.GenerateCollectionID();
+            baseCollection.CollectionName = "Base Collection";
+            baseCollection.CollectionType = "All";
+            baseCollection.CardCount = 0;
+            baseCollection.TCGUserID = savedUser.UserID;
+
 
             try
             {
                 _userService.CreateUser(savedUser);
+                _collectionService.AddCollection(baseCollection);
             }
             catch (Exception ex) {
                 _logger.LogError("New user could not be registered");

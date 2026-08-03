@@ -4,6 +4,7 @@ import Home from './pages/Home'
 import Login from './pages/Login'
 import Register from './pages/Register'
 import Profile from './pages/Profile'
+import Collections from './pages/Collections';
 import { AuthContext } from './context/AuthContext'
 import './App.css'
 
@@ -22,6 +23,7 @@ function App() {
               <Route path="/login" element={isLoggedIn ? null : <Login />}  />
               <Route path="/register" element={isLoggedIn ? null : <Register />} />
               <Route path="/profile" element={isLoggedIn ? <Profile /> : null} />
+              <Route path="/collections" element={isLoggedIn ? <Collections /> : null} />
        </Routes>
     </BrowserRouter>
   )

@@ -20,10 +20,29 @@ public class CollectionService
         dbContext = context;
     }
 
+    public int GenerateCollectionID()
+    {
+        return (dbContext.Collection.Any() ? dbContext.Collection.Max(c => c.CollectionID) : 0) + 1;
+    }
+
     public async void AddCollection(Collection newCollection)
     {
         await dbContext.Collection.AddAsync(newCollection);
         dbContext.SaveChanges();
+    }
+
+    public async Task<List<Collection>> GetCollections(TCGUser user)
+    {
+        var collections = await dbContext.Collection.Where(c => c.TCGUserID == user.UserID)
+        .Select(c => new Collection
+        {
+            CollectionID = c.CollectionID,
+            CollectionName = c.CollectionName,
+            CardCount = c.CardCount,
+            CollectionType = c.CollectionType
+        })
+        .ToListAsync();
+        return collections;
     }
 }
 

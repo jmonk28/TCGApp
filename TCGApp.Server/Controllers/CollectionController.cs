@@ -42,12 +42,13 @@ namespace TCGApp.Server.Controllers
 
             //Build new collection
             Collection collectionBuilder = new Collection();
+            collectionBuilder.CollectionID = _collectionService.GenerateCollectionID();
             collectionBuilder.CollectionName = newCollection.CollectionName;
             collectionBuilder.CollectionType = newCollection.CollectionType;
             //New collection starts with no cards
             collectionBuilder.CardCount = 0;
             //MOST IMPORTANT THING!!! Collection MUST be foreign keyed to its owning user
-            collectionBuilder.TCGUserId = user.UserID;
+            collectionBuilder.TCGUserID = user.UserID;
 
             try
             {
@@ -58,6 +59,28 @@ namespace TCGApp.Server.Controllers
               }
 
             return Ok();
+        }
+
+
+        [AllowAnonymous]
+        [HttpPost("getcollections")]
+        [EnableCors("AllowSpecificOrigins")]
+        public async Task<IActionResult> GetCollections()
+        {
+            //Read refresh token
+            var refreshToken = Request.Cookies["refreshToken"];
+            if (string.IsNullOrEmpty(refreshToken)) _logger.LogInformation("Refresh cookie not working in refresh");
+            if (refreshToken == null) return Unauthorized("No active refresh token");
+
+            //Get user
+            var user = await _userService.GetUserByRefreshToken(refreshToken);
+            if (user == null) return Unauthorized("Invalid refresh token");
+
+            //Get collections via the collection service
+            var collections = await _collectionService.GetCollections(user);
+            if (collections == null) return BadRequest("Failure to get user collections");
+
+            return Ok(collections);
         }
 
     }

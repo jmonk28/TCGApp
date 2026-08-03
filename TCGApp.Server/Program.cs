@@ -16,6 +16,7 @@ var builder = WebApplication.CreateBuilder(args);
 var connectionString = builder.Configuration.GetConnectionString("DefaultConnection") ?? throw new InvalidOperationException("Connection string 'DefaultConnection' not found.");
 builder.Services.AddDbContext<TCGAppContext>(options => options.UseSqlServer(connectionString));
 builder.Services.AddScoped<UserService>();
+builder.Services.AddScoped<CollectionService>();
 builder.Services.AddScoped<TokenService>();
 builder.Services.Configure<JwtSettings>(builder.Configuration.GetSection("Jwt"));
 

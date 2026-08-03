@@ -17,7 +17,5 @@ namespace TCGApp.Server.Models
         public DateTime? LastLogin { get; set; }
         public string? RefreshTokenHash { get; set; }
         public DateTime? RefreshTokenExpiry { get; set; }
-
-        public ICollection<Collection>? Collections { get; set; }
     }
 }

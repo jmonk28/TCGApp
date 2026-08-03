@@ -8,7 +8,7 @@ namespace TCGApp.Server.Models
     {
 
         [Key]
-        public int Id { get; set; }
+        public int CollectionID { get; set; }
         [Required]
         public string CollectionName { get; set; }
         [Required]
@@ -17,7 +17,7 @@ namespace TCGApp.Server.Models
         public ICollection<CollectionCard>? Cards { get; set; } // Navigation property to the cards in the collection
 
         [ForeignKey("TCGUser")]
-        public int TCGUserId { get; set; } // Foreign key to the owning user
+        public int TCGUserID { get; set; } // Foreign key to the owning user
         public TCGUser TCGUser { get; set; } // Navigation property to the owning user
     }
 }
