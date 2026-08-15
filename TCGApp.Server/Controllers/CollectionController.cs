@@ -49,6 +49,8 @@ namespace TCGApp.Server.Controllers
             collectionBuilder.CardCount = 0;
             //MOST IMPORTANT THING!!! Collection MUST be foreign keyed to its owning user
             collectionBuilder.TCGUserID = user.UserID;
+            //If we are at this endpoint, we will not be creating a base collection, so we set IsBase to 0
+            collectionBuilder.IsBase = 0;
 
             try
             {

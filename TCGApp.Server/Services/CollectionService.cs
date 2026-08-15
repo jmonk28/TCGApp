@@ -39,7 +39,8 @@ public class CollectionService
             CollectionID = c.CollectionID,
             CollectionName = c.CollectionName,
             CardCount = c.CardCount,
-            CollectionType = c.CollectionType
+            CollectionType = c.CollectionType,
+            IsBase = c.IsBase
         })
         .ToListAsync();
         return collections;

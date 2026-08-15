@@ -14,5 +14,7 @@ namespace TCGApp.Server.Models
         public Collection? Collection { get; set; } // Navigation property to the collection
         public int CardID { get; set; }
         public Card? Card { get; set; }
+        public int TCGUserID { get; set; }
+        public TCGUser? TCGUser { get; set; }
     }
 }

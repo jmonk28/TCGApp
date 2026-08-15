@@ -36,10 +36,15 @@ namespace TCGApp.Server.Controllers
             if (string.IsNullOrEmpty(refreshToken)) _logger.LogInformation("Refresh cookie not working");
             if (refreshToken == null) return Unauthorized("Could not validate user");
 
+            //Get user
+            var user = await _userService.GetUserByRefreshToken(refreshToken);
+            if (user == null) return Unauthorized("Invalid refresh token");
+
             CollectionCard newCollectionCardBuilder = new CollectionCard();
             newCollectionCardBuilder.CollectionCardID = _cardService.GenerateCollectionCardID();
             newCollectionCardBuilder.CollectionID = newCollectionCard.CollectionID;
             newCollectionCardBuilder.CardID = newCollectionCard.CardID;
+            newCollectionCardBuilder.TCGUserID = user.UserID;
 
             try
             {
@@ -68,6 +73,35 @@ namespace TCGApp.Server.Controllers
             return Ok(collectionCards);
         }
 
+        [AllowAnonymous]
+        [HttpPost("getdatabasecards")]
+        [EnableCors("AllowSpecificOrigins")]
+        public async Task<IActionResult> GetDatabaseCards([FromBody] int collectionID)
+        {
+            //Read refresh token
+            var refreshToken = Request.Cookies["refreshToken"];
+            if (string.IsNullOrEmpty(refreshToken)) _logger.LogInformation("Refresh cookie not working");
+            if (refreshToken == null) return Unauthorized("Could not validate user");
+
+            var databaseCards = await _cardService.GetFirstTenDatabaseCards();
+
+            return Ok(databaseCards);
+        }
+
+        [AllowAnonymous]
+        [HttpPost("getdatabasecardsfromcollectioncards")]
+        [EnableCors("AllowSpecificOrigins")]
+        public async Task<IActionResult> GetDatabaseCardsFromCollectionCards([FromBody] List<CollectionCard> collectionCardList)
+        {
+            //Read refresh token
+            var refreshToken = Request.Cookies["refreshToken"];
+            if (string.IsNullOrEmpty(refreshToken)) _logger.LogInformation("Refresh cookie not working");
+            if (refreshToken == null) return Unauthorized("Could not validate user");
+
+            var databaseCards = await _cardService.GetDatabaseCardsFromCollectionCards(collectionCardList);
+
+            return Ok(databaseCards);
+        }
 
     }
 }

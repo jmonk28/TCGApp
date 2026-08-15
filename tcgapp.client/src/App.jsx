@@ -25,7 +25,7 @@ function App() {
               <Route path="/register" element={isLoggedIn ? null : <Register />} />
               <Route path="/profile" element={isLoggedIn ? <Profile /> : null} />
               <Route path="/collections" element={isLoggedIn ? <Collections /> : null} />
-              <Route path="/collectionview/:username/:collectionname" element={ isLoggedIn ? <CollectionView /> : null } />
+              <Route path="/collectionview/:username/:collectionid" element={ isLoggedIn ? <CollectionView /> : null } />
        </Routes>
     </BrowserRouter>
   )

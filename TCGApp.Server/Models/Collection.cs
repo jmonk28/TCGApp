@@ -19,5 +19,6 @@ namespace TCGApp.Server.Models
         [ForeignKey("TCGUser")]
         public int TCGUserID { get; set; } // Foreign key to the owning user
         public TCGUser TCGUser { get; set; } // Navigation property to the owning user
+        public int IsBase { get; set; } // Indicates whether the collection is the base collection or not
     }
 }
