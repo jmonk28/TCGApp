@@ -17,6 +17,7 @@ var connectionString = builder.Configuration.GetConnectionString("DefaultConnect
 builder.Services.AddDbContext<TCGAppContext>(options => options.UseSqlServer(connectionString));
 builder.Services.AddScoped<UserService>();
 builder.Services.AddScoped<CollectionService>();
+builder.Services.AddScoped<CardService>();
 builder.Services.AddScoped<TokenService>();
 builder.Services.Configure<JwtSettings>(builder.Configuration.GetSection("Jwt"));
 

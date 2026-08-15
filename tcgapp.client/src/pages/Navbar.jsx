@@ -41,6 +41,7 @@ export default function Navbar({ brand = 'TCG App', links = null, onNavigate = n
   const defaultLinks = [
     { to: '/', label: 'Home' },
     { to: '/collections', label: 'Collections' },
+    { to: '/mycards', label: 'My Cards'},
     { to: '/search', label: 'Search' },
     { to: '/about', label: 'About' },
   ];
@@ -97,6 +98,7 @@ export default function Navbar({ brand = 'TCG App', links = null, onNavigate = n
         } catch (err) {
             console.log(err);
         }
+        await navigate("/");
         setPopUpMessage("Logout Successful!");
         setLogoutModalOpen(true);
         setIsLoggedIn(false);

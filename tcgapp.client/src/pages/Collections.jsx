@@ -1,4 +1,4 @@
-import { useState, useEffect, useRef } from 'react';
+﻿import { useState, useEffect, useRef, useContext } from 'react';
 import { AuthContext } from '../context/AuthContext';
 import Navbar from './Navbar';
 import PopUpModal from '../assets/PopUpModal';
@@ -10,6 +10,7 @@ export default function Collections() {
     const [popUpMessage, setPopUpMessage] = useState(null);
     const [collectionList, setCollectionList] = useState([]);
     const didRun = useRef(false);
+    const { user } = useContext(AuthContext)
 
     useEffect(() => {
 
@@ -49,16 +50,19 @@ export default function Collections() {
 
     return (
         <>
-        <Navbar />
+            <Navbar />
+
+            <h1>{user}'s Collections</h1>
 
             {collectionList.map((item, index) => (
                 <div key={index}>
-                    <div style={{ display: 'flex', gap: '5px', borderTop: '2px solid gray', borderBottom: '2px solid gray'}}>
-                        <h2 style={{color: 'gray'}}>+</h2>
+                    <div style={{ display: 'flex', borderBottom: '2px solid gray', cursor: 'pointer' }} onClick={() => {}}>
                         <h2>{item.collectionName}</h2>
+                        <div style={{ marginLeft: 'auto' }}><h2 style={{ color: 'gray' }}>→</h2></div>
                     </div>
                 </div>
             ))}
+            <div style={{ justifyContent: 'center', marginTop: '12px' }}><button>Add New Collection</button></div>
             <PopUpModal isOpen={collectionsModalOpen} onClose={() => { setCollectionsModalOpen(false); setPopUpMessage(null); }}>
                 <p>{popUpMessage}</p>
             </PopUpModal>
