@@ -14,10 +14,11 @@ using TCGApp.Server.Utilities;
 
 public class CardService
 {
-
+    private ILogger<CardService> _logger;
     public readonly TCGAppContext dbContext;
-    public CardService(TCGAppContext context)
+    public CardService(ILogger<CardService> logger, TCGAppContext context)
     {
+        _logger = logger;
         dbContext = context;
     }
 
@@ -34,7 +35,7 @@ public class CardService
 
     public async Task<List<CollectionCard>> GetCardsInCollection(int collectionID)
     {
-        var collectionCards = await dbContext.CollectionCard.Where(cc => cc.CollectionCardID == collectionID)
+        var collectionCards = await dbContext.CollectionCard.Where(cc => cc.CollectionID == collectionID)
         .Select(cc => new CollectionCard
         {
             CollectionCardID = cc.CollectionCardID,
