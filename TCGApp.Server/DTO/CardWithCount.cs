@@ -8,7 +8,7 @@ public class CardWithCount
     public string CardGame { get; set; } // e.g. "Magic", "Pokemon", etc.
     public string Rarity { get; set; } // e.g. "Common", "Rare", etc.
     public string CardSet { get; set; } // e.g. "Core Set 2021", "Shadows Over Innistrad", etc.
-    public float Price { get; set; } // Market price of the card
+    public double Price { get; set; } // Market price of the card
     public string SpecialProperties { get; set; } // e.g. "Foil", "First Edition", etc.
     public string InGameProperties { get; set; } // e.g. "Haste", "Flying", etc.
     public string Image { get; set; }

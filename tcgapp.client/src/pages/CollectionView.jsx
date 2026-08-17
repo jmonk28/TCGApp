@@ -57,14 +57,17 @@ export default function CollectionView() {
             {trueCardList.length == 0 && (
                 <p>No cards in this collection yet</p>
             )}
-            {trueCardList.length > 0 && (trueCardList.map((card, index) => (
-                <div key={index} style={{display: 'flex', gap: '10px'}}>
-                    <div className="card-display">
-                        <img src={card.image} className="card-image" />
+            <div style={{ display: 'flex', gap: '10px', width: 'auto' }}>
+                {trueCardList.length > 0 && (trueCardList.map((card, index) => (
+                    <div key={index}>
+                        <div className="collection-card-display">
+                            <img src={card.image} className="collection-card-image" />
+                        </div>
+                        <h5>{card.cardName}</h5>
+                        <h6 style={{ color: '#00B3B8' }}>{card.cardGame}</h6>
                     </div>
-                    <h5>{card.cardName}</h5>
-                </div>
-            )))}
+                )))}
+            </div>
             <div style={{ justifyContent: 'center', marginTop: '12px' }}><button>Add Cards</button></div>
         </main>
         <PopUpModal isOpen={infoModalOpen} onClose={() => { setInfoModalOpen(false); setPopUpMessage(null); navigate("/"); }}>

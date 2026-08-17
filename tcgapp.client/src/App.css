@@ -53,6 +53,22 @@
     border-radius: 5px;
 }
 
+.collection-card-display {
+    width: auto;
+    height: 250px;
+    border-radius: 2px;
+    background-color: #808080;
+    display: flex;
+    align-items: center;
+    cursor: pointer;
+}
+
+.collection-card-image {
+    max-height: 250px;
+    width: auto;
+    border-radius: 3px;
+}
+
 .profile-item {
     width: 400px;
     margin-left: 20px;
