@@ -58,26 +58,26 @@ namespace TCGApp.Server.Controllers
             return Ok();
         }
 
-        //[AllowAnonymous]
-        //[HttpPost("getcollectioncards")]
-        //[EnableCors("AllowSpecificOrigins")]
-        //public async Task<IActionResult> GetCollectionCards([FromBody] int collectionID)
-        //{
-        //    //Read refresh token
-        //    var refreshToken = Request.Cookies["refreshToken"];
-        //    if (string.IsNullOrEmpty(refreshToken)) _logger.LogInformation("Refresh cookie not working");
-        //    if (refreshToken == null) return Unauthorized("Could not validate user");
+        [AllowAnonymous]
+        [HttpPost("getcollectioncards")]
+        [EnableCors("AllowSpecificOrigins")]
+        public async Task<IActionResult> GetCollectionCards([FromBody] int collectionID)
+        {
+            //Read refresh token
+            var refreshToken = Request.Cookies["refreshToken"];
+            if (string.IsNullOrEmpty(refreshToken)) _logger.LogInformation("Refresh cookie not working");
+            if (refreshToken == null) return Unauthorized("Could not validate user");
 
-        //    var collectionCards = await _cardService.GetCardsInCollection(collectionID);
-        //    if (collectionCards == null) _logger.LogInformation("NO COLLECTION CARDS WERE RETURNED FROM THE CONTROLLER");
+            var collectionCards = await _cardService.GetCardsInCollection(collectionID);
+            if (collectionCards == null) _logger.LogInformation("NO COLLECTION CARDS WERE RETURNED FROM THE CONTROLLER");
 
-        //    return Ok(collectionCards);
-        //}
+            return Ok(collectionCards);
+        }
 
         [AllowAnonymous]
         [HttpPost("getdatabasecards")]
         [EnableCors("AllowSpecificOrigins")]
-        public async Task<IActionResult> GetDatabaseCards([FromBody] int collectionID)
+        public async Task<IActionResult> GetDatabaseCards()
         {
             //Read refresh token
             var refreshToken = Request.Cookies["refreshToken"];

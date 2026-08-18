@@ -31,7 +31,7 @@ export default function Home() {
 
       {isLoggedIn && (<section aria-label="popular-cards" style={{ marginTop: '20px' }}>
             <h1>Popular This Week</h1>
-            <CardCarousel cards={cards} container="card-display" cardClass="card-image"/>
+            <CardCarousel cards={cards} container="card-display" cardClass="card-image" numItemsShow={1} numItemsScroll={1} selectOn={false} />
       </section>)}
 
      </main>
