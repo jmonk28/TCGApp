@@ -59,6 +59,53 @@ namespace TCGApp.Server.Controllers
         }
 
         [AllowAnonymous]
+        [HttpPost("addcardstocollection")]
+        [EnableCors("AllowSpecificOrigins")]
+        public async Task<IActionResult> AddCardsToCollection([FromBody] AddCardsToCollection newCollectionCards)
+        {
+            _logger.LogInformation("WE ARE IN THE ADD CARDS BULK ENDPOINT");
+            //Read refresh token
+            var refreshToken = Request.Cookies["refreshToken"];
+            if (string.IsNullOrEmpty(refreshToken)) _logger.LogInformation("Refresh cookie not working");
+            if (refreshToken == null) return Unauthorized("Could not validate user");
+
+            //Get user
+            var user = await _userService.GetUserByRefreshToken(refreshToken);
+            if (user == null) return Unauthorized("Invalid refresh token");
+
+            List<CollectionCard> cardList = new List<CollectionCard>();
+
+            foreach (var card in newCollectionCards.Cards)
+            {
+                _logger.LogInformation($"Card Name: {card.CardName}");
+                _logger.LogInformation($"Card Count: {card.CardCount}");
+
+                for (int num = 0; num < card.CardCount; num++)
+                {
+
+                    CollectionCard newCollectionCardBuilder = new CollectionCard();
+                    newCollectionCardBuilder.CollectionCardID = cardList.Any() ? cardList.Last().CollectionCardID + 1 : _cardService.GenerateCollectionCardID();
+                    newCollectionCardBuilder.CollectionID = newCollectionCards.CollectionID;
+                    newCollectionCardBuilder.CardID = card.CardID;
+                    newCollectionCardBuilder.TCGUserID = user.UserID;
+                    cardList.Add(newCollectionCardBuilder);
+                }
+            }
+
+            try
+            {
+                _cardService.AddCollectionCardBulk(cardList);
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError("New Collection Cards could not be added");
+            }
+
+
+            return Ok();
+        }
+
+        [AllowAnonymous]
         [HttpPost("getcollectioncards")]
         [EnableCors("AllowSpecificOrigins")]
         public async Task<IActionResult> GetCollectionCards([FromBody] int collectionID)

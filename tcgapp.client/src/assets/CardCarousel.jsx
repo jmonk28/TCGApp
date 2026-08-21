@@ -3,11 +3,9 @@ import ReactSimplyCarousel from 'react-simply-carousel';
 
 
 
-export default function CardCarousel({ cards, container, cardClass, numItemsShow, numItemsScroll, selectOn }) {
+export default function CardCarousel({ cards, container, cardClass, numItemsShow, numItemsScroll, selectOn, counts, setCounts }) {
 
     const [activeSlideIndex, setActiveSlideIndex] = useState(0);
-    //Define structure for keeping track of each card's desired count
-    const [counts, setCounts] = useState({})
 
     useEffect(() => {
         // Force carousel to recalc width after mount

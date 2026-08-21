@@ -33,6 +33,12 @@ public class CardService
         dbContext.SaveChanges();
     }
 
+    public async void AddCollectionCardBulk(List<CollectionCard> cards)
+    {
+        await dbContext.CollectionCard.AddRangeAsync(cards);
+        dbContext.SaveChanges();
+    }
+
     public async Task<List<CollectionCard>> GetCardsInCollection(int collectionID)
     {
         var collectionCards = await dbContext.CollectionCard.Where(cc => cc.CollectionID == collectionID)

@@ -13,6 +13,9 @@ export default function CollectionView() {
     const [popUpMessage, setPopUpMessage] = useState(null);
     const [trueCardList, setTrueCardList] = useState([]);
     const [databaseCardList, setDatabaseCardList] = useState([]);
+    const [cardsToAdd, setCardsToAdd] = useState([]);
+    //Define structure for keeping track of each card's desired count
+    const [counts, setCounts] = useState({})
     const didRun = useRef(false);
     const navigate = useNavigate();
 
@@ -52,6 +55,11 @@ export default function CollectionView() {
 
     }, [])
 
+    useEffect(() => {
+        console.log("cardsToAdd updated:", cardsToAdd);
+    }, [cardsToAdd]);
+
+
     async function pullDBCards() {
 
         try {
@@ -75,6 +83,44 @@ export default function CollectionView() {
 
     }
 
+    async function cardSubmit(e) {
+        //Prevent page reload
+        e.preventDefault();
+
+        //Place the requested counts of each card into each card object and return it as a new list
+        const newCardList = databaseCardList.map(card => ({
+            ...card,
+            cardCount: counts[card.cardID] ?? 0
+        })).filter(card => card.cardCount > 0);
+
+        setCardsToAdd(newCardList);
+
+        //Sanity check that objects are what I expect
+        console.log(cardsToAdd[0]);
+
+        try {
+            const resp = await fetch("https://localhost:7207/api/Card/addcardstocollection", {
+                method: 'POST',
+                credentials: 'include',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({collectionID: collectionid, cards: newCardList})
+            })
+
+            if (!resp.ok) {
+                setPopUpMessage("Failed to add requested cards");
+                setInfoModalOpen(true);
+                setAddCardModalOpen(false);
+                return;
+            }
+
+        } catch (err) {
+            console.log(`Error while submitting collection cards: ${err}`);
+        }
+
+        setAddCardModalOpen(false);
+
+    }
+
     return (
     <>
         <Navbar />
@@ -95,15 +141,15 @@ export default function CollectionView() {
             </div>
             <div style={{ justifyContent: 'center', marginTop: '12px' }}><button onClick={() => { pullDBCards(); setAddCardModalOpen(true); }}>Add Cards</button></div>
         </main>
-        <PopUpModal isOpen={infoModalOpen} onClose={() => { setInfoModalOpen(false); setPopUpMessage(null); navigate("/"); }}>
+        <PopUpModal isOpen={infoModalOpen} onClose={() => { setInfoModalOpen(false); setPopUpMessage(null); }}>
             <p>{popUpMessage}</p>
             </PopUpModal>
         <PopUpModal isOpen={addCardModalOpen} onClose={() => { setAddCardModalOpen(false); }}>
-                <form>
+            <form onSubmit={cardSubmit} noValidate>
                 <div style={{ justifyContent: 'center' }}>
                     <h2>Add Cards to Collection</h2>
                     <h4>Available Cards</h4>
-                    {addCardModalOpen && (<CardCarousel cards={databaseCardList} container="collection-card-display" cardClass="collection-card-image" numItemsShow={4} numItemsScroll={4} selectOn={true} />)}
+                        {addCardModalOpen && (<CardCarousel cards={databaseCardList} container="collection-card-display" cardClass="collection-card-image" numItemsShow={4} numItemsScroll={4} selectOn={true} counts={counts} setCounts={setCounts} />)}
                 </div>
                 <button type="submit" style={{ padding: '10px 16px', margin: '10px' }}>
                     Add Cards
