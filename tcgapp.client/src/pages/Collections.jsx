@@ -11,6 +11,10 @@ export default function Collections() {
     const [newCollectionsModalOpen, setNewCollectionsModalOpen] = useState(false);
     const [popUpMessage, setPopUpMessage] = useState(null);
     const [collectionList, setCollectionList] = useState([]);
+    const [newCollectionName, setNewCollectionName] = useState(null);
+    const [newCollectionType, setNewCollectionType] = useState("Misc");
+    const [typeDropDownOpen, setTypeDropDownOpen] = useState(false);
+    const COLLECTION_TYPES = ["Misc", "Magic", "Pokemon", "Yu-Gi-Oh", "One Piece"];
     const didRun = useRef(false);
     const { user } = useContext(AuthContext);
     const navigate = useNavigate();
@@ -51,6 +55,30 @@ export default function Collections() {
         console.log(`Updated collectionList; Current number of items: ${collectionList.length}`);
     }, [collectionList])
 
+
+    async function submitCollection(e) {
+
+        e.preventDefault();
+
+        try {
+            const resp = await fetch("https://localhost:7207/api/Collection/addcollection", {
+                method: 'POST',
+                credentials: 'include',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ collectionName: newCollectionName, collectionType: newCollectionType })
+            });
+
+            if (!resp.ok) {
+                setPopUpMessage("Failed to add collection");
+                setCollectionsModalOpen(true);
+                return;
+            }
+        } catch (err) {
+            console.log(`Error while adding collection: ${err}`);
+        }
+
+    }
+
     return (
         <>
             <Navbar />
@@ -70,7 +98,20 @@ export default function Collections() {
                 <p>{popUpMessage}</p>
             </PopUpModal>
             <PopUpModal isOpen={newCollectionsModalOpen} onClose={() => { setNewCollectionsModalOpen(false); }}>
-                <p></p>
+                <form onSubmit={submitCollection} style={{display: 'block', gap: '10px'}} noValidate>
+                    <label htmlFor="collectionName">Collection Name:</label>
+                    <input id="collectionName" type="text" placeholder="NewCollection123" style={{display: 'block', width: '100%', padding: 'auto'}} onChange={e => setNewCollectionName(e.target.value)} />
+                    <div style={{marginTop: '12px'}}>
+                        <label htmlFor="collectionType">Collection Type:</label>
+                        <div id="collectionType" style={{ cursor: 'pointer', border: '2px solid gray', padding: 8 }} onClick={() => setTypeDropDownOpen(true)}>{newCollectionType}</div>
+                        <div style={{ position: 'absolute' }} hidden={!typeDropDownOpen}>
+                            {COLLECTION_TYPES.map((item, index) => (
+                                <div key={index} style={{ padding: '15px', cursor: 'pointer' }} onClick={() => { setNewCollectionType(item); setTypeDropDownOpen(false); }}>{item}</div>
+                            ))}
+                        </div>
+                    </div>
+                    <button type="submit" style={{marginTop: '15px'}}>Add Collection</button>
+                </form>
             </PopUpModal>
         </>
     );

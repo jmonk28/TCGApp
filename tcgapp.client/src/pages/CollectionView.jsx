@@ -131,8 +131,11 @@ export default function CollectionView() {
             <div style={{ display: 'flex', gap: '10px', width: 'auto', justifyContent: 'center'}}>
                 {trueCardList.length > 0 && (trueCardList.map((card, index) => (
                     <div key={index}>
-                        <div className="collection-card-display">
-                            <img src={card.image} className="collection-card-image" />
+                        <div style={{display: 'flex', gap: '5px'}}>
+                            <div style={{ color: 'gray', fontSize: '25px' }}>x{card.cardCount}</div>
+                            <div className="collection-card-display">
+                                <img src={card.image} className="collection-card-image" />
+                            </div>
                         </div>
                         <h5>{card.cardName}</h5>
                         <h6 style={{ color: '#00B3B8' }}>{card.cardGame}</h6>
