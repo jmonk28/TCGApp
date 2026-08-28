@@ -55,7 +55,6 @@ namespace TCGApp.Server.Controllers
             baseCollection.CollectionID = _collectionService.GenerateCollectionID();
             baseCollection.CollectionName = "Base Collection";
             baseCollection.CollectionType = "All";
-            baseCollection.CardCount = 0;
             baseCollection.TCGUserID = savedUser.UserID;
             //Here we are creating the user and their base collection, so we will set IsBase to 1
             baseCollection.IsBase = 1;

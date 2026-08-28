@@ -7,6 +7,7 @@ using TCGApp.Server.Service;
 using TCGApp.Server.Models;
 using TCGApp.Server.DTO;
 using TCGApp.Server.Utilities;
+using Microsoft.Identity.Client;
 
 namespace TCGApp.Server.Controllers
 {
@@ -40,13 +41,17 @@ namespace TCGApp.Server.Controllers
             var user = await _userService.GetUserByRefreshToken(refreshToken);
             if (user == null) return Unauthorized("Invalid refresh token");
 
+            //Check if collection name exists already and reject request if it does
+            _logger.LogInformation("NEW COLLECTION NAME: " + newCollection.CollectionName);
+            var exists = await _collectionService.CollectionNameExists(newCollection.CollectionName, user.UserID);
+            _logger.LogInformation("COLLECTION EXISTS: " + exists);
+            if (exists) return BadRequest("Collection name already exists for given user");
+
             //Build new collection
             Collection collectionBuilder = new Collection();
             collectionBuilder.CollectionID = _collectionService.GenerateCollectionID();
             collectionBuilder.CollectionName = newCollection.CollectionName;
             collectionBuilder.CollectionType = newCollection.CollectionType;
-            //New collection starts with no cards
-            collectionBuilder.CardCount = 0;
             //MOST IMPORTANT THING!!! Collection MUST be foreign keyed to its owning user
             collectionBuilder.TCGUserID = user.UserID;
             //If we are at this endpoint, we will not be creating a base collection, so we set IsBase to 0

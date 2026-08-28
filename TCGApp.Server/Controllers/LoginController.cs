@@ -65,7 +65,6 @@ namespace TCGApp.Server.Controllers
             } catch (Exception ex)
             {
                 _logger.LogError("Error while saving user refresh token");
-                throw ex;
             }
 
             var cookieOptions = new CookieOptions

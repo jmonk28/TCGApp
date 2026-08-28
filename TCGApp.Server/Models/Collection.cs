@@ -13,7 +13,6 @@ namespace TCGApp.Server.Models
         public string CollectionName { get; set; }
         [Required]
         public string CollectionType { get; set; } // e.g. "Magic", "Pokemon", etc.
-        public int CardCount { get; set; } // Number of cards in the collection
         public ICollection<CollectionCard>? Cards { get; set; } // Navigation property to the cards in the collection
 
         [ForeignKey("TCGUser")]

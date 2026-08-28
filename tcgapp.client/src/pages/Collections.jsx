@@ -69,13 +69,14 @@ export default function Collections() {
             });
 
             if (!resp.ok) {
-                setPopUpMessage("Failed to add collection");
+                setPopUpMessage("Failed to add collection; Do you already have a collection by that name?");
                 setCollectionsModalOpen(true);
                 return;
             }
         } catch (err) {
             console.log(`Error while adding collection: ${err}`);
         }
+        window.location.reload();
 
     }
 
@@ -89,7 +90,10 @@ export default function Collections() {
                 <div key={index}>
                     <div style={{ display: 'flex', borderBottom: '2px solid gray', cursor: 'pointer' }} onClick={() => {navigate(`/collectionview/${user}/${item.collectionID}`)}}>
                         <h2>{item.collectionName}</h2>
-                        <div style={{ marginLeft: 'auto' }}><h2 style={{ color: 'gray' }}>→</h2></div>
+                        <div style={{ display: 'flex', gap: '5px', marginLeft: 'auto' }}>
+                            <div><h2 style={{ color: 'gray' }}>Cards: {item.cardCount}</h2></div>
+                            <div><h2 style={{ color: 'gray' }}>→</h2></div>
+                        </div>
                     </div>
                 </div>
             ))}
@@ -100,15 +104,15 @@ export default function Collections() {
             <PopUpModal isOpen={newCollectionsModalOpen} onClose={() => { setNewCollectionsModalOpen(false); }}>
                 <form onSubmit={submitCollection} style={{display: 'block', gap: '10px'}} noValidate>
                     <label htmlFor="collectionName">Collection Name:</label>
-                    <input id="collectionName" type="text" placeholder="NewCollection123" style={{display: 'block', width: '100%', padding: 'auto'}} onChange={e => setNewCollectionName(e.target.value)} />
+                    <input id="collectionName" type="text" placeholder="NewCollection123" style={{display: 'block', width: 'auto', padding: 15}} onChange={e => setNewCollectionName(e.target.value)} />
                     <div style={{marginTop: '12px'}}>
                         <label htmlFor="collectionType">Collection Type:</label>
-                        <div id="collectionType" style={{ cursor: 'pointer', border: '2px solid gray', padding: 8 }} onClick={() => setTypeDropDownOpen(true)}>{newCollectionType}</div>
-                        <div style={{ position: 'absolute' }} hidden={!typeDropDownOpen}>
+                        <div id="collectionType" style={{ cursor: 'pointer', border: '2px solid gray', padding: 15 }} onClick={() => setTypeDropDownOpen(true)}>{newCollectionType}</div>
+                        <dialog open={typeDropDownOpen} style={{ position: 'absolute' }}>
                             {COLLECTION_TYPES.map((item, index) => (
                                 <div key={index} style={{ padding: '15px', cursor: 'pointer' }} onClick={() => { setNewCollectionType(item); setTypeDropDownOpen(false); }}>{item}</div>
                             ))}
-                        </div>
+                        </dialog>
                     </div>
                     <button type="submit" style={{marginTop: '15px'}}>Add Collection</button>
                 </form>

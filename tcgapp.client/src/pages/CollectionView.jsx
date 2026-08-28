@@ -117,7 +117,7 @@ export default function CollectionView() {
             console.log(`Error while submitting collection cards: ${err}`);
         }
 
-        setAddCardModalOpen(false);
+        window.location.reload();
 
     }
 
@@ -152,7 +152,7 @@ export default function CollectionView() {
                 <div style={{ justifyContent: 'center' }}>
                     <h2>Add Cards to Collection</h2>
                     <h4>Available Cards</h4>
-                        {addCardModalOpen && (<CardCarousel cards={databaseCardList} container="collection-card-display" cardClass="collection-card-image" numItemsShow={4} numItemsScroll={4} selectOn={true} counts={counts} setCounts={setCounts} />)}
+                    {addCardModalOpen && (<CardCarousel cards={databaseCardList} container="collection-card-display" cardClass="collection-card-image" numItemsShow={4} numItemsScroll={4} selectOn={true} counts={counts} setCounts={setCounts} />)}
                 </div>
                 <button type="submit" style={{ padding: '10px 16px', margin: '10px' }}>
                     Add Cards
